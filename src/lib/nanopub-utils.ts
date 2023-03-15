@@ -10,7 +10,7 @@ export const double = (value: number) => {
 
 export const getUpdateStatus = (elementId, npUri) => {
   document.getElementById(elementId).innerHTML = "<em>Checking for updates...</em>";
-  const shuffledApiUrls = [...grlcNpApiUrls].sort((a, b) => 0.5 - Math.random());
+  const shuffledApiUrls = [...grlcNpApiUrls].sort(() => 0.5 - Math.random());
   getUpdateStatusX(elementId, npUri, shuffledApiUrls);
 }
 
@@ -51,7 +51,7 @@ const getUpdateStatusX = (elementId, npUri, apiUrls) => {
       getUpdateStatusX(elementId, npUri, apiUrls);
     }
   };
-  r.onerror = function(error) {
+  r.onerror = function() {
     getUpdateStatusX(elementId, npUri, apiUrls);
   }
   r.send();
@@ -85,7 +85,6 @@ export const populate = (elementId, apiUrl, template) => {
 };
 
 export const getLatestNp = (callback) => {
-  const lastLine = "";
   fetch("https://server.np.trustyuri.net/nanopubs.txt")
     .then((response) => response.text())
     .then((data) => { const lines = data.split(/\n/); callback(lines[lines.length - 2]); } );
