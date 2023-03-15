@@ -3529,6 +3529,11 @@ node-fetch@^2.6.1:
   dependencies:
     whatwg-url "^5.0.0"
 
+node-json2html@^2.2.3:
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/node-json2html/-/node-json2html-2.2.3.tgz#a8f270efff86b797306889452914277232a20217"
+  integrity sha512-W8EmHuTRlZdmQFM4jHfXodwylxGFy64wPPysqZoiSKzV7KRg38RQmEAJQOKqCbR112vSV7mzvGsXL2F8zkcYMA==
+
 node-preload@^0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/node-preload/-/node-preload-0.2.1.tgz#c03043bb327f417a18fee7ab7ee57b408a144301"
