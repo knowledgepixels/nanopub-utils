@@ -7,10 +7,6 @@ export const grlcNpApiUrls = [
   'https://grlc.services.np.trustyuri.net/api/local/local/'
 ];
 
-export const double = (value: number) => {
-  return value * 2;
-};
-
 export const getUpdateStatus = (elementId: string, npUri: string) => {
   document.getElementById(elementId).innerHTML = '<em>Checking for updates...</em>';
   const shuffledApiUrls = [...grlcNpApiUrls].sort(() => 0.5 - Math.random());
