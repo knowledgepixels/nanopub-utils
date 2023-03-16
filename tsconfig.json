@@ -2,8 +2,8 @@
   "compilerOptions": {
     "incremental": true,
     "target": "esnext",
-    "outDir": "build/main",
-    "rootDir": "src",
+    "outDir": "./build/dist",
+    "rootDir": "./src",
     "moduleResolution": "node",
     //"module": "commonjs",
     "declaration": true,
