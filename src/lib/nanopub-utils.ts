@@ -3,7 +3,7 @@
 // import json2html from 'node-json2html';
 
 export const grlcNpApiUrls = [
-  'https://grlc.nps.petapico.org/api/local/local/',
+  'https://grlc.nps.knowledgepixels.com/api/local/local/',
   'https://grlc.services.np.trustyuri.net/api/local/local/'
 ];
 
