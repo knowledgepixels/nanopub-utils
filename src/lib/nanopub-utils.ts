@@ -1,6 +1,8 @@
 /* eslint-disable functional/immutable-data */
 
-// import json2html from 'node-json2html';
+// ----------
+//
+// For first-generation services:
 
 export const grlcNpApiUrls = [
   'https://grlc.nps.knowledgepixels.com/api/local/local/',
@@ -56,32 +58,6 @@ const getUpdateStatusX = (elementId: string, npUri: string, apiUrls) => {
   r.send();
 };
 
-export const getJson = (url: string, callback) => {
-  const request = new XMLHttpRequest();
-  request.open('GET', url, true);
-  request.responseType = 'json';
-  request.onload = function () {
-    const status = request.status;
-    if (status === 200) {
-      callback(null, request.response);
-    } else {
-      callback(status, request.response);
-    }
-  };
-  request.send();
-};
-
-// export const populate = (elementId, apiUrl, template) => {
-//   getJson(apiUrl, function (error, response) {
-//     if (error == null) {
-//       document.getElementById(elementId).innerHTML = json2html.render(response, template);
-//     } else {
-//       document.getElementById(elementId).innerHTML =
-//         '<li><em>error: something went wrong with calling the API</en></li>';
-//     }
-//   });
-// };
-
 export const getLatestNp = callback => {
   fetch('https://server.np.trustyuri.net/nanopubs.txt')
     .then(response => response.text())
@@ -90,3 +66,43 @@ export const getLatestNp = callback => {
       callback(lines[lines.length - 2]);
     });
 };
+
+// ----------
+//
+// For second-generation services:
+
+export const queryServers = [
+  'knowledgepixels.com', 'petapico.org', 'np.trustyuri.net'
+];
+
+export const query = (specCode: string, queryName: string, callback) => {
+  const shuffledQueryServers = [...queryServers].sort(() => 0.5 - Math.random());
+  queryX(specCode, queryName, shuffledQueryServers, callback);
+}
+
+const queryX = (specCode: string, queryName: string, queryServerList, callback) => {
+  if (queryServerList.length == 0) {
+    // TODO
+    return;
+  }
+  const queryServer = queryServerList.shift();
+  const requestUrl = 'https://grlc.' + queryServer + '/api-url/' + queryName + '?specUrl=https://nanodash.' + queryServer + '/grlc-spec/' + specCode + '/';
+  const r = new XMLHttpRequest();
+  r.open('GET', requestUrl, true);
+  r.setRequestHeader('Accept', 'application/json');
+  r.responseType = 'json';
+  r.onload = function () {
+    if (r.status == 200) {
+      const bindings = r.response['results']['bindings'];
+      callback(bindings);
+    } else {
+      queryX(specCode, queryName, queryServerList, callback);
+    }
+  };
+  r.onerror = function () {
+    // TODO
+  };
+  r.send();
+}
+
+// ----------
