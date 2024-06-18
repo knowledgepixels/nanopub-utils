@@ -80,6 +80,8 @@ export const query = (queryId: string, template) => {
   queryX(queryId, shuffledQueryServers, template);
 }
 
+export const nanopubIconSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8" width="10pt"><path d="M5,8H8L3,0H0M8,4.8V0H5M0,3.2V8H3"/></svg>'
+
 const queryX = (queryId: string, queryServerList, template) => {
   if (queryServerList.length == 0) {
     // TODO
@@ -101,6 +103,7 @@ const queryX = (queryId: string, queryServerList, template) => {
         const el = template.content.cloneNode(true);
         [...el.querySelectorAll('[nps_innerText]')].forEach(e => e.innerText = b[e.getAttribute('nps_innerText')]['value']);
         [...el.querySelectorAll('[nps_attribute]')].forEach(e => e.setAttribute(e.getAttribute('nps_attribute').split("=")[0], b[e.getAttribute('nps_attribute').split("=")[1]]['value']));
+        [...el.querySelectorAll('span.nanopub_icon')].forEach(e => e.outerHTML = nanopubIconSvg);
         template.parentNode.appendChild(el);
       });
     } else {
