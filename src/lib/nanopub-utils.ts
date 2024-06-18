@@ -75,17 +75,19 @@ export const queryServers = [
   'knowledgepixels.com', 'petapico.org', 'np.trustyuri.net'
 ];
 
-export const query = (specCode: string, queryName: string, callback) => {
+export const query = (queryId: string, template) => {
   const shuffledQueryServers = [...queryServers].sort(() => 0.5 - Math.random());
-  queryX(specCode, queryName, shuffledQueryServers, callback);
+  queryX(queryId, shuffledQueryServers, template);
 }
 
-const queryX = (specCode: string, queryName: string, queryServerList, callback) => {
+const queryX = (queryId: string, queryServerList, template) => {
   if (queryServerList.length == 0) {
     // TODO
     return;
   }
   const queryServer = queryServerList.shift();
+  const specCode = queryId.split("/")[0];
+  const queryName = queryId.split("/")[1];
   const requestUrl = 'https://grlc.' + queryServer + '/api-url/' + queryName + '?specUrl=https://nanodash.' + queryServer + '/grlc-spec/' + specCode + '/';
   const r = new XMLHttpRequest();
   r.open('GET', requestUrl, true);
@@ -93,10 +95,16 @@ const queryX = (specCode: string, queryName: string, queryServerList, callback) 
   r.responseType = 'json';
   r.onload = function () {
     if (r.status == 200) {
+      template.parentNode.querySelectorAll('.nps_temp').forEach(c => c.outerHTML = '');
       const bindings = r.response['results']['bindings'];
-      callback(bindings);
+      bindings.forEach( b => {
+        const el = template.content.cloneNode(true);
+        [...el.querySelectorAll('[nps_innerText]')].forEach(e => e.innerText = b[e.getAttribute('nps_innerText')]['value']);
+        [...el.querySelectorAll('[nps_attribute]')].forEach(e => e.setAttribute(e.getAttribute('nps_attribute').split("=")[0], b[e.getAttribute('nps_attribute').split("=")[1]]['value']));
+        template.parentNode.appendChild(el);
+      });
     } else {
-      queryX(specCode, queryName, queryServerList, callback);
+      queryX(queryId, queryServerList, template);
     }
   };
   r.onerror = function () {
