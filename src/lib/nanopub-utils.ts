@@ -101,8 +101,18 @@ const queryX = (queryId: string, queryServerList, template) => {
       const bindings = r.response['results']['bindings'];
       bindings.forEach( b => {
         const el = template.content.cloneNode(true);
-        [...el.querySelectorAll('[nps_innerText]')].forEach(e => e.innerText = b[e.getAttribute('nps_innerText')]['value']);
-        [...el.querySelectorAll('[nps_attribute]')].forEach(e => e.setAttribute(e.getAttribute('nps_attribute').split("=")[0], b[e.getAttribute('nps_attribute').split("=")[1]]['value']));
+        [...el.querySelectorAll('[nps_innerText]')].forEach(e => {
+          if (b[e.getAttribute('nps_innerText')]) {
+            e.innerText = b[e.getAttribute('nps_innerText')]['value'];
+          } else {
+            e.innerText = '';
+          }
+        });
+        [...el.querySelectorAll('[nps_attribute]')].forEach(e => {
+          if (e.getAttribute('nps_attribute')) {
+            e.setAttribute(e.getAttribute('nps_attribute').split("=")[0], b[e.getAttribute('nps_attribute').split("=")[1]]['value']);
+          }
+        });
         [...el.querySelectorAll('span.nanopub_icon')].forEach(e => e.outerHTML = nanopubIconSvg);
         template.parentNode.appendChild(el);
       });
