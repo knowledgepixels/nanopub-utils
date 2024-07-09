@@ -72,7 +72,7 @@ export const getLatestNp = callback => {
 // For second-generation services:
 
 export const queryServers = [
-  'knowledgepixels.com', 'petapico.org', 'np.trustyuri.net'
+  'https://query.knowledgepixels.com/', 'https://query.np.kpxl.org/', 'https://query.np.trustyuri.net/'
 ];
 
 export const query = (queryId: string, template) => {
@@ -80,7 +80,7 @@ export const query = (queryId: string, template) => {
   queryX(queryId, shuffledQueryServers, template);
 }
 
-export const nanopubIconSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8" width="10pt"><path d="M5,8H8L3,0H0M8,4.8V0H5M0,3.2V8H3"/></svg>'
+export const nanopubIconSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8" width="8pt"><path d="M5,8H8L3,0H0M8,4.8V0H5M0,3.2V8H3"/></svg>'
 
 const queryX = (queryId: string, queryServerList, template) => {
   if (queryServerList.length == 0) {
@@ -90,7 +90,7 @@ const queryX = (queryId: string, queryServerList, template) => {
   const queryServer = queryServerList.shift();
   const specCode = queryId.split("/")[0];
   const queryName = queryId.split("/")[1];
-  const requestUrl = 'https://grlc.' + queryServer + '/api-url/' + queryName + '?specUrl=https://nanodash.' + queryServer + '/grlc-spec/' + specCode + '/';
+  const requestUrl = queryServer + 'api/' + specCode + '/' + queryName;
   const r = new XMLHttpRequest();
   r.open('GET', requestUrl, true);
   r.setRequestHeader('Accept', 'application/json');
@@ -104,12 +104,15 @@ const queryX = (queryId: string, queryServerList, template) => {
         [...el.querySelectorAll('[nps_innerText]')].forEach(e => {
           if (b[e.getAttribute('nps_innerText')]) {
             e.innerText = b[e.getAttribute('nps_innerText')]['value'];
-          } else {
-            e.innerText = '';
+          }
+        });
+        [...el.querySelectorAll('[nps_user]')].forEach(e => {
+          if (b[e.getAttribute('nps_user')]) {
+            setName(b[e.getAttribute('nps_user')]['value'], e);
           }
         });
         [...el.querySelectorAll('[nps_attribute]')].forEach(e => {
-          if (e.getAttribute('nps_attribute')) {
+          if (b[e.getAttribute('nps_attribute').split("=")[1]]) {
             e.setAttribute(e.getAttribute('nps_attribute').split("=")[0], b[e.getAttribute('nps_attribute').split("=")[1]]['value']);
           }
         });
@@ -125,5 +128,21 @@ const queryX = (queryId: string, queryServerList, template) => {
   };
   r.send();
 }
+
+const setName = (userId: string, element) => {
+  element.innerText = userId;
+  element.setAttribute("href", userId);
+  // TODO make sure same ID is only queried once and result cached
+  const r = new XMLHttpRequest();
+  // TODO try different Nanodash instances
+  r.open('GET', "https://nanodash.knowledgepixels.com/get-name?id=" + userId, true);
+  r.onload = function () {
+    if (r.status == 200) {
+      element.innerText = r.responseText;
+    }
+  };
+  r.send();
+}
+
 
 // ----------
