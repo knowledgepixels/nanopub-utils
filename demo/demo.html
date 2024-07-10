@@ -1,21 +1,35 @@
 <!DOCTYPE html>
 <html lang="en-US">
-  <head><meta charset="utf-8" /><title>Testing Nanopub JS</title></head>
-  <body>
-    <h1>Testing 1st Generation Services...</h1>
-    <script type="module">
-      import { getUpdateStatus } from "https://a.knowledgepixels.com/js/nanopub-utils.js";
-      getUpdateStatus("status", "https://w3id.org/np/RADHta9ivZ3boxjiHZcEtcKpnid_F07GUOnTBgBquE7jo");
-    </script>
-    <p><span id="status"><em>Checking for updates...</em></span></p>
-    <h1>Testing 2nd Generation Services...</h1>
-    <ul>
-      <script type="module">
-        import { query } from "https://a.knowledgepixels.com/js/nanopub-utils.js";
-        query("RA08cTBCfz8zVRdxeIR6ps1h3k_dSddXTnxCKc24rBT5A/get-3pff-events", item);
-      </script>
-      <li class="nps_temp"><em>(loading...)</em></li>
-      <template id=item><li><span nps_innerText=eventName></span> - <span nps_innerText=eventDate></span> - <a nps_attribute="href=np"><span class="nanopub_icon"></span></a></li></template>
-    </ul>
-  </body>
+<head><meta charset="utf-8" /><title>Testing Nanopub JS</title></head>
+<body>
+
+<h1>Testing 1st Generation Services...</h1>
+<script type="module">
+  import { getUpdateStatus } from "https://a.knowledgepixels.com/js/nanopub-utils.js";
+  getUpdateStatus("status", "https://w3id.org/np/RADHta9ivZ3boxjiHZcEtcKpnid_F07GUOnTBgBquE7jo");
+</script>
+<p><span id="status"><em>Checking for updates...</em></span></p>
+
+<h1>Testing 2nd Generation Services...</h1>
+<ul>
+  <script type="module">
+    import { query } from "https://a.knowledgepixels.com/js/nanopub-utils.js";
+    query("RA08cTBCfz8zVRdxeIR6ps1h3k_dSddXTnxCKc24rBT5A/get-3pff-events", item);
+  </script>
+  <li class="nps_temp"><em>(loading...)</em></li>
+  <template id=item><li><span nps_innerText=eventName></span> - <span nps_innerText=eventDate></span> - <a nps_attribute="href=np"><span class="nanopub_icon"></span></a></li></template>
+</ul>
+
+<h3>Dynamically loading module:</h3>
+<ul>
+<script type="module">
+  let l = ["a.knowledgepixelsx.com/js/", "a.knowledgepixels.com/js/"];
+  let npu = null; while (l.length > 0) try { npu = await import("https://"+l.shift() +"nanopub-utils.js"); break; } catch (e) {}
+  npu.query("RAna6AB9majJbslfFCtrZaM3_QPKzeDnOUsbGOx2LUgfE/get-top-creators-last30d", top_creators_template);
+</script>
+<li class="nps_temp"><em>(loading...)</em></li>
+<template id="top_creators_template"><li><a nps_user=userid></a>: <span nps_innerText=count></span></li></template>
+</ul>
+
+</body>
 </html>
