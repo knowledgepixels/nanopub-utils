@@ -75,14 +75,14 @@ export const queryServers = [
   'https://query.knowledgepixels.com/', 'https://query.np.kpxl.org/', 'https://query.np.trustyuri.net/'
 ];
 
-export const query = (queryId: string, template) => {
+export const query = (queryId: string, template, params = {}) => {
   const shuffledQueryServers = [...queryServers].sort(() => 0.5 - Math.random());
-  queryX(queryId, shuffledQueryServers, template);
+  queryX(queryId, shuffledQueryServers, template, params);
 }
 
 export const nanopubIconSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8" width="8pt"><path d="M5,8H8L3,0H0M8,4.8V0H5M0,3.2V8H3"/></svg>'
 
-const queryX = (queryId: string, queryServerList, template) => {
+const queryX = (queryId: string, queryServerList, template, params) => {
   if (queryServerList.length == 0) {
     // TODO
     return;
@@ -92,7 +92,13 @@ const queryX = (queryId: string, queryServerList, template) => {
   const queryName = queryId.split("/")[1];
   const requestUrl = queryServer + 'api/' + specCode + '/' + queryName;
   const r = new XMLHttpRequest();
-  r.open('GET', requestUrl, true);
+  // eslint-disable-next-line no-var
+  var paramStr = '?';
+  // eslint-disable-next-line functional/no-loop-statement, no-var
+  for (var p in params) {
+    paramStr = paramStr + '&' + encodeURIComponent(p) + '=' + encodeURIComponent(params[p]);
+  }
+  r.open('GET', requestUrl + paramStr, true);
   r.setRequestHeader('Accept', 'application/json');
   r.responseType = 'json';
   r.onload = function () {
@@ -120,7 +126,7 @@ const queryX = (queryId: string, queryServerList, template) => {
         template.parentNode.appendChild(el);
       });
     } else {
-      queryX(queryId, queryServerList, template);
+      queryX(queryId, queryServerList, template, params);
     }
   };
   r.onerror = function () {

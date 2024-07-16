@@ -20,15 +20,25 @@
   <template id=item><li><span nps_innerText=eventName></span> - <span nps_innerText=eventDate></span> - <a nps_attribute="href=np"><span class="nanopub_icon"></span></a></li></template>
 </ul>
 
-<h3>Dynamically loading module:</h3>
+<h3>Dynamically loading module</h3>
 <ul>
 <script type="module">
   let l = ["a.knowledgepixelsx.com/js/", "a.knowledgepixels.com/js/"];
-  let npu = null; while (l.length > 0) try { npu = await import("https://"+l.shift() +"nanopub-utils.js"); break; } catch (e) {}
+  let npu = null; while (l.length > 0) try { npu = await import("https://"+l.shift()+"nanopub-utils.js"); break; } catch (e) {}
   npu.query("RAna6AB9majJbslfFCtrZaM3_QPKzeDnOUsbGOx2LUgfE/get-top-creators-last30d", top_creators_template);
 </script>
 <li class="nps_temp"><em>(loading...)</em></li>
 <template id="top_creators_template"><li><a nps_user=userid></a>: <span nps_innerText=count></span></li></template>
+</ul>
+
+<h3>With parameter</h3>
+<ul>
+  <script type="module">
+    import { query } from "https://a.knowledgepixels.com/js/nanopub-utils.js";
+    query("RA-SLjrEN7M3tW4FJPUSUhtgvOI_kIMwP2JRDTYTcJnXA/get-latest-bdj-nanopubs-by-author", item3, {"author":"https://orcid.org/0000-0002-2151-1278"});
+  </script>
+  <li class="nps_temp"><em>(loading...)</em></li>
+  <template id=item3><li><span nps_innerText=label></span> <a nps_attribute="href=np"><span class="nanopub_icon"></span></a></li></template>
 </ul>
 
 </body>
